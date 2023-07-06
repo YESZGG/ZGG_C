@@ -1,33 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#ifdef _WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
-struct list
-{
-    // 数据域
-    int stuno;     // 学号
-    char name[20]; // 姓名
-    char sex;      // 性别
-    int height;    // 身高
-    int score;     // 成绩
-    // 指针域
-    struct list *next;
-};
-
-struct list *init_head();
-struct list *init_node();
-void insertHeadNode(struct list *head);     // 头插法
-void insertTailNode(struct list *head);     // 尾插法
-void printList(struct list *head);          // 打印数据
-void traverseLinkedList(struct list *head); // 查找
-void deleteNode(struct list *head);         // 删除
-void modifyNodes(struct list *head);        // 修改
-void moveNodes(struct list *head);          // 移动
-void freeList(struct list *head);           // 释放
+#include "studentlist.h"
 
 /*初始化头结点*/
 struct list *init_head()
@@ -85,6 +56,7 @@ void insertHeadNode(struct list *head)
     }
     printf("请输入学生信息：学号 姓名 性别 身高 成绩\n");
     scanf("%d %s %c %d %d", &stuno, name, &sex, &height, &score);
+    while(getchar() != '\n');// 清除缓冲区
     // 判断学号是否重复 学号为主键 不能相同
     struct list *p = head->next;
     while (p != NULL)
@@ -127,6 +99,7 @@ void insertTailNode(struct list *head)
     }
     printf("请输入学生信息：学号 姓名 性别 身高 成绩\n");
     scanf("%d %s %c %d %d", &stuno, name, &sex, &height, &score);
+    while(getchar() != '\n');// 清除缓冲区
     // 判断学号是否重复 学号为主键 不能相同
     struct list *p = head->next;
     while (p != NULL)
@@ -156,6 +129,7 @@ void traverseLinkedList(struct list *head)
     printf("----------查找----------\n");
     printf("请输入您想要查找的学生的学号：");
     scanf("%d", &target);
+    while(getchar() != '\n');// 清除缓冲区
     if (head->next == NULL)
     {
         printf("该链表是空链表，没有数据.\n");
@@ -208,6 +182,7 @@ void deleteNode(struct list *head)
     int deletestuNo;
     printf("请输入要删除的学生的学号：");
     scanf("%d", &deletestuNo);
+    while(getchar() != '\n');// 清除缓冲区
     while (current->next != NULL)
     {
         if (current->next->stuno == deletestuNo)
@@ -235,6 +210,7 @@ void modifyNodes(struct list *head)
     int stuno;
     printf("请输入要修改的学生学号：");
     scanf("%d", &stuno);
+    while(getchar() != '\n');// 清除缓冲区
 
     struct list *p = head->next;
     while (p != NULL)
@@ -259,8 +235,10 @@ void moveNodes(struct list *head)
     int position; // 移动位置
     scanf("%d", &position);
     printf("请输入要移动到第几个节点：");
+    while(getchar() != '\n');// 清除缓冲区
     int targetPosition; // 目标位置
     scanf("%d", &targetPosition);
+    while(getchar() != '\n');// 清除缓冲区
 
     struct list *current = head->next;
     struct list *previous = NULL;
@@ -354,6 +332,7 @@ void arbitraryInsert(struct list *head)
     printf("请输入要插入的位置：");
     int position;
     scanf("%d", &position);
+    while(getchar() != '\n');// 清除缓冲区
 
     struct list *current = head;
     struct list *previous = NULL;
@@ -460,18 +439,4 @@ int Function_Select(struct list *head)
         }
         sleep(2);
     }
-}
-int main()
-{
-    struct list *head = init_head(); // 头节点初始化
-    if (head == NULL)
-    {
-        printf("init head fail\n"); // 头节点初始化失败
-        return -1;
-    }
-    Function_Select(head); // 功能界面
-
-    // 释放链表内存
-    freeList(head);
-    return 0;
 }

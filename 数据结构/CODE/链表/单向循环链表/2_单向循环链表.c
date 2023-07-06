@@ -99,7 +99,11 @@ void delete_head(struct list *head, struct list *node)
 {
     // 如果链表没有存储任何信息，直接返回
     if (head->next == head)
+    {
+        printf("该单向循环链表未存储任何信息.\n");
         return;
+    }
+    return;
     struct list *tmp = NULL;
     tmp = head->next;
     head->next = head->next->next;
@@ -139,7 +143,7 @@ void delete_node(struct list *head, struct list *node)
         return;
     }
     struct list *p = NULL, *tmp = NULL;
-    for (p = head; p->next != head; p = p->next)
+    for (p = head; p->next != head; p = p->next)// 删除节点从头节点开始遍历，因为删除节点，是删除p->next节点
     {
         // 找到要删除的节点
         if (p->next->num == node->num)
@@ -148,9 +152,10 @@ void delete_node(struct list *head, struct list *node)
             tmp = p->next;
             p->next = p->next->next;
 
+            tmp->next = NULL; // 避免指针悬挂
             // 释放存储的节点
             free(tmp);
-            return;
+            return;// 用break 或 return 不然在删除尾结点时，会多遍历一遍
         }
     }
     printf("未找到要删除的目标节点.\n");
@@ -178,7 +183,7 @@ void find_node(struct list *head)
         }
         count++;
     }
-    printf("查找失败，未找到%d.", target);
+    printf("查找失败，未找到%d.\n", target);
 }
 
 /*修改结点*/
@@ -204,7 +209,7 @@ void change_node(struct list *head)
             return;
         }
     }
-    printf("修改失败.\n");
+    printf("未找到%d，修改失败.\n", num);
 }
 
 /*遍历链表*/
@@ -233,6 +238,7 @@ void relase(struct list *head)
     }
     // 再释放头结点
     free(head);
+    printf("relase success.\n");
 }
 int main()
 {
@@ -290,7 +296,7 @@ int main()
     display(head);
 
     // 释放
-    printf("relase\n");
+    printf("[relase]:\n");
     relase(head);
     return 0;
 }

@@ -136,6 +136,7 @@ void delete_head(struct list *head)
 	struct list *tmp = NULL;
 	tmp = head->next;
 	head->next = head->next->next; // NULL->next
+	tmp->next = NULL;
 	free(tmp);
 }
 
@@ -152,6 +153,7 @@ void delete_tail(struct list *head, struct list *node)
 	}
 	tmp = p->next;
 	p->next = NULL;
+	tmp->next = NULL;
 	free(tmp);
 }
 
@@ -213,6 +215,7 @@ void change_node(struct list *head, int data, int new_data)
 	}
 	printf("change data %d failed.\n", data);
 }
+
 /*遍历链表*/
 void display(struct list *head)
 {
@@ -223,6 +226,24 @@ void display(struct list *head)
 		printf("%d ", p->num);
 	}
 	printf("\n");
+}
+
+/*释放链表*/
+void release(struct list *head)
+{
+	struct list *p = NULL, *tmp = NULL;
+	// 先释放其它结点
+	for (p = head->next; p != NULL;)
+	{
+		tmp = p; // 先存放要释放的结点
+		p = p->next;
+		free(tmp);
+	}
+
+	// 再释放头结点
+	free(head);
+
+	printf("release ok\n");
 }
 
 int main()
@@ -287,5 +308,7 @@ int main()
 
 	display(head);
 
+	printf("[release]:\n");
+	release(head);
 	return 0;
 }
