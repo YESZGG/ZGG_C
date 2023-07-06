@@ -131,6 +131,24 @@ void findBook(struct bookList *head)
     }
 }
 
+// 释放链表
+void release(struct bookList* head)
+{
+    struct bookList *p = head->next,*temp = NULL;
+    while (p != head)
+    {
+        // 1.存起要释放的结点
+        temp = p;
+        // 2.建立新的连接 指向下一个结点
+        p = p->next;
+        // 3.释放存起来的结点
+        free(temp);
+    }
+    // 释放头结点
+    free(head);
+    printf("release success.\n");
+} 
+
 // 功能界面
 int Function_Select(struct bookList *head)
 {
