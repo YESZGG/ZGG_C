@@ -1,0 +1,3 @@
+target:
+	#gcc project.c fun1.c fun2.c -o main -I ./
+	gcc *.c -o main1 -I ./

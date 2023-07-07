@@ -1,0 +1,9 @@
+
+INC = -I ./include
+
+target:main/project.c src/fun1.c src/fun2.c 
+#	gcc $^ -o $@ -I ./include
+	gcc $^ -o $@ $(INC)
+
+clean:
+	rm target
