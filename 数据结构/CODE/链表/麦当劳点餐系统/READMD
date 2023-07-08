@@ -1,10 +1,9 @@
-#ifndef __ORDER_H__
-#define __ORDER_H__
-
+头文件声明：
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+结构体定义：
 struct valuemeal
 {
     char food_name[50];     // 食物名字
@@ -42,6 +41,7 @@ struct menu
     struct menu *prev; // 前驱指针
 };
 
+函数声明：
 extern struct menu *createMenu(int num, char name[]);                      // 创建菜单项函数声明
 extern struct valuemeal *createFood(char name[], int price);               // 创建套餐函数声明
 extern struct snack *createSnack(char name[], int price);                  // 创建小吃函数声明
@@ -59,14 +59,3 @@ extern void freeSnack(struct menu *menu);                                  // �
 extern void freeDrink(struct menu *menu);                                  // 释放饮品内存函数声明
 extern void freeMenu(struct menu *menu);                                   // 释放菜单链表内存函数声明
 
-extern void printMainMenu();
-
-// 打印身份主菜单界面
-void printMainMenu()
-{
-    printf("请选择您的身份：\n");
-    printf("1. 用户\n");
-    printf("2. 管理员\n");
-    printf("0. 退出系统\n");
-}  
-#endif

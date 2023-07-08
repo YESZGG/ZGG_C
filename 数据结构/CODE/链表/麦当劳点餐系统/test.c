@@ -1,13 +1,17 @@
 #include "order.h"
 
-// 创建新的食物节点
+// 创建新的套餐节点
 struct valuemeal *createFood(char name[], int price)
 {
+    // 分配内存空间以存储 struct valuemeal 结构体
     struct valuemeal *food = (struct valuemeal *)malloc(sizeof(struct valuemeal));
+    // 将传入的 name 复制到 food->food_name
     strcpy(food->food_name, name);
+    // 设置 food 的价格为传入的 price
     food->price = price;
-    food->next = NULL;
-    food->prev = NULL;
+    // 将 food 的 next 和 prev 指针都指向自身，创建一个双向循环链表
+    food->next = food->prev = food;
+    // 返回创建的 food 指针
     return food;
 }
 
@@ -17,8 +21,7 @@ struct snack *createSnack(char name[], int price)
     struct snack *snack = (struct snack *)malloc(sizeof(struct snack));
     strcpy(snack->snack_name, name);
     snack->price = price;
-    snack->next = NULL;
-    snack->prev = NULL;
+    snack->next = snack->prev = snack;
     return snack;
 }
 
@@ -28,8 +31,7 @@ struct drink *createDrink(char name[], int price)
     struct drink *drink = (struct drink *)malloc(sizeof(struct drink));
     strcpy(drink->drink_name, name);
     drink->price = price;
-    drink->next = NULL;
-    drink->prev = NULL;
+    drink->next = drink->prev = drink;
     return drink;
 }
 
@@ -39,235 +41,46 @@ struct menu *createMenu(int num, char name[])
     struct menu *menu = (struct menu *)malloc(sizeof(struct menu));
     menu->num = num;
     strcpy(menu->menu_name, name);
-    menu->f_valuemeal = NULL;
-    menu->f_snack = NULL;
-    menu->f_drink = NULL;
-    menu->next = NULL;
-    menu->prev = NULL;
+    menu->f_valuemeal = createFood("", 0); // 初始化头结点
+    menu->f_snack = createSnack("", 0);
+    menu->f_drink = createDrink("", 0);
+    menu->next = menu->prev = menu; // 双向循环链表的头尾指针都指向自身
     return menu;
 }
 
 // 添加套餐到菜单
 void addValuemealToMenu(struct menu *menu, struct valuemeal *food)
 {
-    if (menu->f_valuemeal == NULL)
-    {
-        menu->f_valuemeal = food;
-    }
-    else
-    {
-        struct valuemeal *cur = menu->f_valuemeal;
-        while (cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = food;
-        food->prev = cur;
-    }
+    // 获取当前菜单中最后一个节点
+    struct valuemeal *last = menu->f_valuemeal->prev;
+    // 将最后一个节点的 next 指针指向要添加的 food
+    last->next = food;
+    // 将 food 的 prev 指针指向最后一个节点
+    food->prev = last;
+    // 将 food 的 next 指针指向菜单的第一个节点（即原来的头节点）
+    food->next = menu->f_valuemeal;
+    // 将菜单的头节点的 prev 指针指向 food
+    menu->f_valuemeal->prev = food;
 }
 
 // 添加小吃到菜单
 void addSnackToMenu(struct menu *menu, struct snack *snack)
 {
-    if (menu->f_snack == NULL)
-    {
-        menu->f_snack = snack;
-    }
-    else
-    {
-        struct snack *cur = menu->f_snack;
-        while (cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = snack;
-        snack->prev = cur;
-    }
+    struct snack *last = menu->f_snack->prev; // 获取最后一个节点
+    last->next = snack;
+    snack->prev = last;
+    snack->next = menu->f_snack;
+    menu->f_snack->prev = snack;
 }
 
 // 添加饮品到菜单
 void addDrinkToMenu(struct menu *menu, struct drink *drink)
 {
-    if (menu->f_drink == NULL)
-    {
-        menu->f_drink = drink;
-    }
-    else
-    {
-        struct drink *cur = menu->f_drink;
-        while (cur->next != NULL)
-        {
-            cur = cur->next;
-        }
-        cur->next = drink;
-        drink->prev = cur;
-    }
-}
-
-// 计算套餐总价
-int calculateTotalPrice(struct menu *menu, int num)
-{
-    struct valuemeal *food = menu->f_valuemeal;
-    int totalPrice = 0;
-
-    while (food != NULL && num > 0)
-    {
-        totalPrice += food->price;
-        food = food->next;
-        num--;
-    }
-
-    return totalPrice;
-}
-
-// 打印用户点餐菜单界面
-void printOrderMenu(struct menu *menu)
-{
-    printf("请选择您要点的菜品（输入编号，0返回主菜单）：\n");
-    if (menu->f_valuemeal != NULL)
-    {
-        printf("  套餐：\n");
-        struct valuemeal *food = menu->f_valuemeal;
-        int i = 1;
-        while (food != NULL)
-        {
-            printf("\t%d.%-10s\t\t价格：%d\n", i, food->food_name, food->price);
-            food = food->next;
-            i++;
-        }
-    }
-
-    if (menu->f_snack != NULL)
-    {
-        printf("  小吃：\n");
-        struct snack *snack = menu->f_snack;
-        int i = 1;
-        while (snack != NULL)
-        {
-            printf("\t%d.%-10s   \t价格：%2d\n", i, snack->snack_name, snack->price);
-            snack = snack->next;
-            i++;
-        }
-    }
-
-    if (menu->f_drink != NULL)
-    {
-        printf("  饮品：\n");
-        struct drink *drink = menu->f_drink;
-        int i = 1;
-        while (drink != NULL)
-        {
-            printf("\t%d.%-10s   \t价格：%2d\n", i, drink->drink_name, drink->price);
-            drink = drink->next;
-            i++;
-        }
-    }
-}
-
-// 用户点餐
-// 用户点餐
-int orderFood(struct menu *menu)
-{
-    printOrderMenu(menu);
-
-    int choice;
-    printf("请选择您要点的菜品（输入编号，0返回主菜单）：");
-    scanf("%d", &choice);
-
-    if (choice == 0)
-    {
-        return 0; // 返回主菜单
-    }
-
-    int totalPrice = 0;
-
-    switch (menu->num)
-    {
-        case 1: // 超值套餐
-        {
-            struct valuemeal *food = menu->f_valuemeal;
-            int num = choice;
-            while (food != NULL && num > 1)
-            {
-                food = food->next;
-                num--;
-            }
-
-            if (food == NULL)
-            {
-                printf("无效的选择，请重新输入。\n");
-                return orderFood(menu); // 继续点餐
-            }
-
-            printf("已添加：%s\n", food->food_name);
-            totalPrice += food->price;
-            break;
-        }
-        case 2: // 小吃
-        {
-            struct snack *snack = menu->f_snack;
-            int num = choice;
-            while (snack != NULL && num > 1)
-            {
-                snack = snack->next;
-                num--;
-            }
-
-            if (snack == NULL)
-            {
-                printf("无效的选择，请重新输入。\n");
-                return orderFood(menu); // 继续点餐
-            }
-
-            printf("已添加：%s\n", snack->snack_name);
-            totalPrice += snack->price;
-            break;
-        }
-        case 3: // 饮品
-        {
-            struct drink *drink = menu->f_drink;
-            int num = choice;
-            while (drink != NULL && num > 1)
-            {
-                drink = drink->next;
-                num--;
-            }
-
-            if (drink == NULL)
-            {
-                printf("无效的选择，请重新输入。\n");
-                return orderFood(menu); // 继续点餐
-            }
-
-            printf("已添加：%s\n", drink->drink_name);
-            totalPrice += drink->price;
-            break;
-        }
-        default:
-            printf("无效的选择，请重新输入。\n");
-            return orderFood(menu); // 继续点餐
-    }
-
-    int continueOrder = orderFood(menu); // 继续点餐
-    if (continueOrder == 0)
-    {
-        return totalPrice; // 返回总价
-    }
-    else
-    {
-        return totalPrice + continueOrder; // 继续点餐并返回总价
-    }
-}
-
-
-// 打印用户主菜单界面
-void printUserMainMenu()
-{
-    printf("欢迎使用麦乐送点餐系统\n");
-    printf("  1. 超值套餐\n");
-    printf("  2. 小吃\n");
-    printf("  3. 饮品\n");
-    printf("  0. 退出系统\n");
+    struct drink *last = menu->f_drink->prev; // 获取最后一个节点
+    last->next = drink;
+    drink->prev = last;
+    drink->next = menu->f_drink;
+    menu->f_drink->prev = drink;
 }
 
 // 创建菜单和食物数据
@@ -312,110 +125,245 @@ struct menu *createMenuData()
     return head;
 }
 
-int main()
+// 打印用户主菜单界面
+void printUserMainMenu()
 {
-    struct menu *head = createMenuData(); // 创建菜单和食物数据
+    printf("\t------欢迎使用麦乐送点餐系统------\n");
+    printf("\t\t  1. 超值套餐\n");
+    printf("\t\t  2. 小吃   \n");
+    printf("\t\t  3. 饮品   \n");
+    printf("\t\t  0. 退出系统\n");
+}
+
+// 计算套餐+小吃+饮料总价
+int calculateTotalPrice(struct menu *menu, int num)
+{
+    struct valuemeal *food = menu->f_valuemeal->next; // 第一个节点
+    struct snack *snack = menu->f_snack->next;
+    struct drink *drink = menu->f_drink->next;
+    int totalPrice = 0;
+
+    while ((food != menu->f_valuemeal || snack != menu->f_snack || drink != menu->f_drink) && num > 0)
+    {
+        if (food != menu->f_valuemeal)
+        {
+            totalPrice += food->price;
+            food = food->next;
+        }
+        else if (snack != menu->f_snack)
+        {
+            totalPrice += snack->price;
+            snack = snack->next;
+        }
+        else if (drink != menu->f_drink)
+        {
+            totalPrice += drink->price;
+            drink = drink->next;
+        }
+
+        num--;
+    }
+
+    return totalPrice;
+}
+
+// 打印用户点餐菜单界面
+void printOrderMenu(struct menu *menu)
+{
+    printf("请选择您要点的菜品（输入编号，0返回主菜单）：\n");
+    if (menu->f_valuemeal->next != menu->f_valuemeal)
+    {
+        printf("  套餐：\n");
+        struct valuemeal *food = menu->f_valuemeal->next; // 第一个节点
+        int i = 1;
+        while (food != menu->f_valuemeal)
+        {
+            printf("\t%d.%-10s\t\t价格：%d\n", i, food->food_name, food->price);
+            food = food->next;
+            i++;
+        }
+    }
+
+    if (menu->f_snack->next != menu->f_snack)
+    {
+        printf("  小吃：\n");
+        struct snack *snack = menu->f_snack->next;
+        int i = 1;
+        while (snack != menu->f_snack)
+        {
+            printf("\t%d.%-10s   \t价格：%2d\n", i, snack->snack_name, snack->price);
+            snack = snack->next;
+            i++;
+        }
+    }
+
+    if (menu->f_drink->next != menu->f_drink)
+    {
+        printf("  饮品：\n");
+        struct drink *drink = menu->f_drink->next;
+        int i = 1;
+        while (drink != menu->f_drink)
+        {
+            printf("\t%d.%-10s   \t价格：%2d\n", i, drink->drink_name, drink->price);
+            drink = drink->next;
+            i++;
+        }
+    }
+}
+
+// 用户点餐
+int orderFood(struct menu *menu)
+{
+    printOrderMenu(menu);
 
     int choice;
-    do
-    {
-        printUserMainMenu(); // 打印用户主菜单界面
-        printf("请输入您的选择：");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-        case 1:
-        {
-            // 超值套餐
-            struct menu *menu = head;
-            while (menu != NULL)
-            {
-                if (menu->num == 1)
-                {
-                    int totalPrice = orderFood(menu);
-                    printf("总价为：%d\n", totalPrice);
-                    printf("\n");
-                    break;
-                }
-                menu = menu->next;
-            }
-            break;
-        }
-        case 2:
-        {
-            // 小吃
-            struct menu *menu = head;
-            while (menu != NULL)
-            {
-                if (menu->num == 2)
-                {
-                    int totalPrice = orderFood(menu);
-                    printf("总价为：%d\n", totalPrice);
-                    printf("\n");
-                    break;
-                }
-                menu = menu->next;
-            }
-            break;
-        }
-        case 3:
-        {
-            // 饮品
-            struct menu *menu = head;
-            while (menu != NULL)
-            {
-                if (menu->num == 3)
-                {
-                    int totalPrice = orderFood(menu);
-                    printf("总价为：%d\n", totalPrice);
-                    printf("\n");
-                    break;
-                }
-                menu = menu->next;
-            }
-            break;
-        }
-        case 0:
-            printf("感谢使用麦乐送点餐系统，再见！\n");
-            break;
-        default:
-            printf("无效的选择，请重新输入。\n");
-            break;
-        }
-    } while (choice != 0);
+    printf("请选择您要点的菜品（输入编号，0返回主菜单）：");
+    scanf("%d", &choice);
 
-    // 释放内存
-    struct menu *cur = head;
-    while (cur != NULL)
+    if (choice == 0)
     {
-        struct menu *temp = cur;
-        cur = cur->next;
+        return 0; // 返回主菜单
+    }
 
-        struct valuemeal *food = temp->f_valuemeal;
-        while (food != NULL)
+    int totalPrice = 0;
+
+    switch (menu->num)
+    {
+    case 1: // 超值套餐
+    {
+        struct valuemeal *food = menu->f_valuemeal->next; // 第一个节点
+        int num = choice;
+        while (food != menu->f_valuemeal && num > 1)
         {
-            struct valuemeal *food_temp = food;
             food = food->next;
-            free(food_temp);
+            num--;
         }
 
-        struct snack *snack = temp->f_snack;
-        while (snack != NULL)
+        if (food == menu->f_valuemeal)
         {
-            struct snack *snack_temp = snack;
+            printf("无效的选择，请重新输入。\n");
+            return orderFood(menu); // 继续点餐
+        }
+
+        printf("已添加：%s\n", food->food_name);
+        totalPrice += food->price;
+        break;
+    }
+    case 2: // 小吃
+    {
+        struct snack *snack = menu->f_snack->next; // 第一个节点
+        int num = choice;
+        while (snack != menu->f_snack && num > 1)
+        {
             snack = snack->next;
-            free(snack_temp);
+            num--;
         }
 
-        struct drink *drink = temp->f_drink;
-        while (drink != NULL)
+        if (snack == menu->f_snack)
         {
-            struct drink *drink_temp = drink;
-            drink = drink->next;
-            free(drink_temp);
+            printf("无效的选择，请重新输入。\n");
+            return orderFood(menu); // 继续点餐
         }
+
+        printf("已添加：%s\n", snack->snack_name);
+        totalPrice += snack->price;
+        break;
+    }
+    case 3: // 饮品
+    {
+        struct drink *drink = menu->f_drink->next; // 第一个节点
+        int num = choice;
+        while (drink != menu->f_drink && num > 1)
+        {
+            drink = drink->next;
+            num--;
+        }
+
+        if (drink == menu->f_drink)
+        {
+            printf("无效的选择，请重新输入。\n");
+            return orderFood(menu); // 继续点餐
+        }
+
+        printf("已添加：%s\n", drink->drink_name);
+        totalPrice += drink->price;
+        break;
+    }
+    default:
+        printf("无效的选择，请重新输入。\n");
+        return orderFood(menu); // 继续点餐
+    }
+
+    int continueOrder = orderFood(menu); // 继续点餐
+    if (continueOrder == 0)
+    {
+        return totalPrice; // 返回总价
+    }
+    else
+    {
+        return totalPrice + continueOrder; // 继续点餐并返回总价
+    }
+}
+
+// 释放套餐内存
+void freeValuemeal(struct menu *menu)
+{
+    struct valuemeal *current = menu->f_valuemeal->next;
+    while (current != menu->f_valuemeal)
+    {
+        struct valuemeal *temp = current;
+        current = current->next;
 
         free(temp);
     }
-    return 0;
+    free(menu->f_valuemeal);
+}
+
+// 释放小吃内存
+void freeSnack(struct menu *menu)
+{
+    struct snack *current = menu->f_snack->next;
+    while (current != menu->f_snack)
+    {
+        struct snack *temp = current;
+        current = current->next;
+
+        free(temp);
+    }
+    free(menu->f_snack);
+}
+
+// 释放饮品内存
+void freeDrink(struct menu *menu)
+{
+    struct drink *current = menu->f_drink->next;
+    while (current != menu->f_drink)
+    {
+        struct drink *temp = current;
+        current = current->next;
+
+        free(temp);
+    }
+    free(menu->f_drink);
+}
+
+// 释放菜单链表内存
+void freeMenu(struct menu *head)
+{
+    struct menu *current = head;
+    while (current != head)
+    {
+        struct menu *temp = current;
+        current = current->next;
+
+        freeValuemeal(temp);
+        freeSnack(temp);
+        freeDrink(temp);
+
+        temp->f_valuemeal = NULL;
+        temp->f_snack = NULL;
+        temp->f_drink = NULL;
+
+        free(temp);
+    }
 }
