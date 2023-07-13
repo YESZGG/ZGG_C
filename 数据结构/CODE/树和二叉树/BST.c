@@ -116,11 +116,29 @@ _linktree remove_node(_linktree root, int data)
     return root;
 }
 
+void handler(_linktree root)
+{   
+    printf("%d ",root->data);
+}
+
+// 前序遍历
+/* 声明了一个名为handler的函数指针，该指针可以指向一个具有_linktree参数和void返回类型的函数/*  */
+void pre_travel(_linktree root,void (*handler)(_linktree))
+{
+    if(root == NULL)
+        return ;
+    handler(root);                      // 根
+    pre_travel(root->lchild,handler);   // 左
+    pre_travel(root->rchild,handler);   // 右
+    draw(root);
+}
+
 int main(void)
 {
     _linktree root = init_tree();
 
     int n;
+    printf("请输入(输入0结束)：");
     while (1)
     {
         scanf("%d", &n); // 从键盘接收一个整数
@@ -139,5 +157,8 @@ int main(void)
         }
         draw(root); // 将BST用网页的形式直观地展现出来
     }
+    printf("前序遍历:\n");
+    pre_travel(root,handler);
+    printf("\n");
     return 0;
 }

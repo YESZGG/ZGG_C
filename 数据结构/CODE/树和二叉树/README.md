@@ -1,3 +1,6 @@
+首先是头文件： head4tree.h、head4queue.h、commonheader.h、drawtree.h
+
+
 在BST.C中
     draw(root); // 将BST用网页的形式直观地展现出来
 使用了draw()函数，可以将BST 形象地画在一个网页上

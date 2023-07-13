@@ -144,15 +144,15 @@ int queue_size(_linkqueue *q)
 /* ↓↓↓↓↓↓↓↓↓↓↓↓↓ 画网页相关算法代码 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */
 
 
-static void pre_travel(TREENODE *root, void (*handler)(TREENODE *))
-{
-	if(root == NULL)
-		return;
+// static void pre_travel(TREENODE *root, void (*handler)(TREENODE *))
+// {
+// 	if(root == NULL)
+// 		return;
 	
-	handler(root);
-	pre_travel(root->lchild, handler);
-	pre_travel(root->rchild, handler);
-}
+// 	handler(root);
+// 	pre_travel(root->lchild, handler);
+// 	pre_travel(root->rchild, handler);
+// }
 
 static void mid_travel(TREENODE *root, void (*handler)(TREENODE *))
 {
