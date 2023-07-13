@@ -1,0 +1,7 @@
+        静夜思
+        唐·李白
+窗前明月光，疑是地上霜。
+举头望明月，低头思故乡。
+
+写的时候用strlen write(fd,buf,strlen(buf))
+读的时候用sizeof  read(fd,buf,sizeof(buf))
