@@ -117,20 +117,58 @@ _linktree remove_node(_linktree root, int data)
 }
 
 void handler(_linktree root)
-{   
-    printf("%d ",root->data);
+{
+    printf("%d ", root->data);
 }
 
 // 前序遍历
 /* 声明了一个名为handler的函数指针，该指针可以指向一个具有_linktree参数和void返回类型的函数/*  */
-void pre_travel(_linktree root,void (*handler)(_linktree))
+void pre_travel(_linktree root, void (*handler)(_linktree))
 {
-    if(root == NULL)
-        return ;
+    if (root == NULL)
+        return;
+    handler(root);                     // 根
+    pre_travel(root->lchild, handler); // 左
+    pre_travel(root->rchild, handler); // 右
+}
+
+// 中序遍历
+/* root 是要遍历的树，handler 是遍历时回调的处理函数 */
+void mid(_linktree root, void (*handler)(_linktree))
+{
+    if (root == NULL)
+        return;
+    mid(root->lchild, handler); // 左
+    handler(root);              // 根
+    mid(root->rchild, handler); // 右
+}
+
+// 后序遍历
+/* root 是要遍历的树，handler是遍历时回调的处理函数 */
+void post_travel(_linktree root, void (*handler)(_linktree))
+{
+    if (root == NULL)
+        return;
+    post_travel(root->lchild, handler); // 左
+    post_travel(root->rchild, handler); // 右
     handler(root);                      // 根
-    pre_travel(root->lchild,handler);   // 左
-    pre_travel(root->rchild,handler);   // 右
-    draw(root);
+}
+
+// 递归计算二叉树深度
+int BiTreeDepth(_linktree root)
+{
+    int dep1 = 0, dep2 = 0;
+    if (root == NULL)
+        return 0;
+    else
+    {
+        dep1 = BiTreeDepth(root->lchild);
+        dep2 = BiTreeDepth(root->rchild);
+        if (dep1 > dep2)
+            return dep1 + 1;
+        else
+            return dep2 + 1;
+    }
 }
 
 int main(void)
@@ -157,8 +195,18 @@ int main(void)
         }
         draw(root); // 将BST用网页的形式直观地展现出来
     }
-    printf("前序遍历:\n");
-    pre_travel(root,handler);
+    printf("前序遍历：\n");
+    pre_travel(root, handler);
     printf("\n");
+    printf("中序遍历：\n");
+    mid(root, handler);
+    printf("\n");
+    printf("后序遍历：\n");
+    post_travel(root, handler);
+    printf("\n");
+    int ret = BiTreeDepth(root);
+    printf("深度 = %d\n",ret);
+    
+    
     return 0;
 }
