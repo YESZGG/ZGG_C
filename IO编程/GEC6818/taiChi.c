@@ -4,6 +4,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <stdlib.h>
+#include <time.h>
 
 #define BUFFER_SIZE 800 * 480
 
@@ -17,54 +19,6 @@ void draw(int x, int y, int color)
     }
 }
 
-void draw_circle(int center_x, int center_y, int radius)
-{
-    for (int y = center_y - radius; y <= center_y + radius; y++)
-    {
-        for (int x = center_x - radius; x <= center_x + radius; x++)
-        {
-            if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x <= center_x)
-            {
-                draw(x, y, 0x00000000);
-            }
-            if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x >= center_x)
-            {
-                draw(x, y, 0x00ffffff);
-            }
-        }
-    }
-}
-
-void draw_taiji(int center_x, int center_y, int radius)
-{
-    int i, j;
-    int scradius = 50;    // 半圆半径
-    int smallradius = 15; // 小圆半径
-    for (i = center_y - radius; i <= center_y + radius; i++)
-    {
-        for (j = center_x - radius; j <= center_x + radius; j++)
-        {
-            if ((i - center_y + scradius) * (i - center_y + scradius) + (j - center_x) * (j - center_x) <= scradius * scradius && j <= center_x)
-            {
-                draw(j, i, 0x00ffffff);
-            }
-            if ((i - center_y - scradius) * (i - center_y - scradius) + (j - center_x) * (j - center_x) <= scradius * scradius && j >= center_x)
-            {
-                draw(j, i, 0x00000000);
-            }
-            if ((i - center_y + scradius) * (i - center_y + scradius) + (j - center_x) * (j - center_x) <= smallradius * smallradius)
-            {
-                draw(j, i, 0x00000000);
-            }
-            if ((i - center_y - scradius) * (i - center_y - scradius) + (j - center_x) * (j - center_x) <= smallradius * smallradius)
-            {
-                draw(j, i, 0x00ffffff);
-            }
-        }
-    }
-}
-
-
 int main(int argc, char *argv[])
 {
     // 打开设备文件
@@ -74,6 +28,8 @@ int main(int argc, char *argv[])
     int white = 0x00ffffff;
     int black = 0x00000000;
     int red = 0x00ff0000;
+    int green = 0x0000ff00;
+    int blue = 0x000000ff;
 
     // lcd的映射 ---- mmap
     addr =
@@ -90,12 +46,12 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // 清空屏幕为白色
+    // 清空屏幕为红色
     for (int y = 0; y < 480; y++) // 行
     {
         for (int x = 0; x < 800; x++) // 列
         {
-            draw(x, y, red); // 绘制白色背景
+            draw(x, y, white); // 绘制红色背景
         }
     }
 
@@ -103,9 +59,42 @@ int main(int argc, char *argv[])
     int center_x = 400; // 圆心横坐标
     int center_y = 240; // 圆心纵坐标
     int radius = 100;   // 半径
-    draw_circle(center_x, center_y, radius);
 
-    draw_taiji(center_x, center_y, radius);
+    int scradius = 50;    // 半圆半径
+    int smallradius = 15; // 小圆半径
+
+    // 清空屏幕为红色
+    for (int y = 0; y < 480; y++) // 行
+    {
+        for (int x = 0; x < 800; x++) // 列
+        {
+            draw(x, y, red); // 绘制红色背景
+            if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x <= center_x)
+            {
+                draw(x, y, black);
+            }
+            if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x >= center_x)
+            {
+                draw(x, y, white);
+            }
+            if ((y - center_y + scradius) * (y - center_y + scradius) + (x - center_x) * (x - center_x) <= scradius * scradius && x <= center_x)
+            {
+                draw(x, y, white);
+            }
+            if ((y - center_y - scradius) * (y - center_y - scradius) + (x - center_x) * (x - center_x) <= scradius * scradius && x >= center_x)
+            {
+                draw(x, y, black);
+            }
+            if ((y - center_y + scradius) * (y - center_y + scradius) + (x - center_x) * (x - center_x) <= smallradius * smallradius)
+            {
+                draw(x, y, black);
+            }
+            if ((y - center_y - scradius) * (y - center_y - scradius) + (x - center_x) * (x - center_x) <= smallradius * smallradius)
+            {
+                draw(x, y, white);
+            }
+        }
+    }
 
     // lcd映射的释放
     int ret = munmap(addr, BUFFER_SIZE * 4);
