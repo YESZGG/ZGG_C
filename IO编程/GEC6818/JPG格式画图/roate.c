@@ -65,31 +65,47 @@ int main(int argc, char *argv[])
         {
             for (int x = 0; x < 800; x++) // 列
             {
-                draw(x, y, red); // 绘制红色背景
+                draw(x, y, white); // 绘制红色背景
                 // 根据旋转角度计算对应位置
                 double radians = angle * M_PI / 180; // 将角度转换为弧度
+                /*
+                计算旋转后的 x 坐标值，其中 (x - center_x) * cos(radians) 表示将点先绕旋转中心逆时针旋转
+                radians 弧度后的 x 坐标，再加上 center_x 表示将旋转后的坐标还原到以原坐标系为基准的坐标系中。
+                */
                 int rotate_x = (x - center_x) * cos(radians) - (y - center_y) * sin(radians) + center_x;
+                /*计算旋转后的 y 坐标值，其中 (x - center_x) * sin(radians) 表示将点先绕旋转中心逆时针旋转
+                radians 弧度后的 y 坐标，再加上 center_y 表示将旋转后的坐标还原到以原坐标系为基准的坐标系中。 */
                 int rotate_y = (x - center_x) * sin(radians) + (y - center_y) * cos(radians) + center_y;
+                if ((rotate_y - center_y) * (rotate_y - center_y) + (rotate_x - center_x) * (rotate_x - center_x) <= ((radius+2) * (radius+2)))
+                {
+                    draw(x, y, black);
+                }
+                // 1.小于400 半径为100 的区域画黑色半圆
                 if ((rotate_y - center_y) * (rotate_y - center_y) + (rotate_x - center_x) * (rotate_x - center_x) <= (radius * radius) && rotate_x <= center_x)
                 {
                     draw(x, y, black);
                 }
+                // 2.大于400 半径为100 的区域画黑色半圆
                 if ((rotate_y - center_y) * (rotate_y - center_y) + (rotate_x - center_x) * (rotate_x - center_x) <= (radius * radius) && rotate_x >= center_x)
                 {
                     draw(x, y, white);
                 }
+                // 3.在圆心400，240 下面的 400，190 画半径为50的白色半圆
                 if ((rotate_y - center_y + scradius) * (rotate_y - center_y + scradius) + (rotate_x - center_x) * (rotate_x - center_x) <= scradius * scradius && rotate_x <= center_x)
                 {
                     draw(x, y, white);
                 }
+                // 4.在圆心400，240 上面的 400，290 画半径为50的黑色半圆
                 if ((rotate_y - center_y - scradius) * (rotate_y - center_y - scradius) + (rotate_x - center_x) * (rotate_x - center_x) <= scradius * scradius && rotate_x >= center_x)
                 {
                     draw(x, y, black);
                 }
+                // 5.在圆心400，240 下面的 400，190 画半径为15的黑色小圆
                 if ((rotate_y - center_y + scradius) * (rotate_y - center_y + scradius) + (rotate_x - center_x) * (rotate_x - center_x) <= smallradius * smallradius)
                 {
                     draw(x, y, black);
                 }
+                // 6.在圆心400，240 上面的 400，290 画半径为15的白色小圆
                 if ((rotate_y - center_y - scradius) * (rotate_y - center_y - scradius) + (rotate_x - center_x) * (rotate_x - center_x) <= smallradius * smallradius)
                 {
                     draw(x, y, white);
@@ -98,8 +114,8 @@ int main(int argc, char *argv[])
         }
 
         // 增加旋转角度
-        angle += 5; // 每次增加1度
-        if (angle >= 360)
+        angle += 2; // 每次增加1度
+        if (angle == 360)
             angle = 0; // 重置角度为0，重新开始旋转
     }
 

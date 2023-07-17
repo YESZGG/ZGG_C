@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
         ball_y += ballSpeedY;
 
         // 判断小球是否碰撞
+        // d=根号［（x1-x2)^2+(y1-y2)^2]  两点间的距离公式
         int distance = (center_x - ball_x) * (center_x - ball_x) + (center_y - ball_y) * (center_y - ball_y);
         int sum_radius = radius + ball_radius;
         if (distance <= sum_radius * sum_radius)
