@@ -69,26 +69,32 @@ int main(int argc, char *argv[])
         for (int x = 0; x < 800; x++) // 列
         {
             draw(x, y, red); // 绘制红色背景
+            // 1.小于400 半径为100 的区域画黑色半圆
             if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x <= center_x)
             {
                 draw(x, y, black);
             }
+            // 2.大于400 半径为100 的区域画黑色半圆
             if ((y - center_y) * (y - center_y) + (x - center_x) * (x - center_x) <= (radius * radius) && x >= center_x)
             {
                 draw(x, y, white);
             }
+            // 3.在圆心400，240 下面的 400，190 画半径为50的白色半圆
             if ((y - center_y + scradius) * (y - center_y + scradius) + (x - center_x) * (x - center_x) <= scradius * scradius && x <= center_x)
             {
                 draw(x, y, white);
             }
+            // 4.在圆心400，240 上面的 400，290 画半径为50的黑色半圆
             if ((y - center_y - scradius) * (y - center_y - scradius) + (x - center_x) * (x - center_x) <= scradius * scradius && x >= center_x)
             {
                 draw(x, y, black);
             }
+            // 5.在圆心400，240 下面的 400，190 画半径为15的黑色小圆
             if ((y - center_y + scradius) * (y - center_y + scradius) + (x - center_x) * (x - center_x) <= smallradius * smallradius)
             {
                 draw(x, y, black);
             }
+            // 6.在圆心400，240 上面的 400，290 画半径为15的白色小圆
             if ((y - center_y - scradius) * (y - center_y - scradius) + (x - center_x) * (x - center_x) <= smallradius * smallradius)
             {
                 draw(x, y, white);
