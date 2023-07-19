@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @version: 
+ * @Author: ZGG
+ * @Date: 2023-07-17 16:27:34
+ * @LastEditors: ZGG
+ * @LastEditTime: 2023-07-18 10:28:45
+ */
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,6 +41,11 @@ int main(int argc, char *argv[])
     int size, nmemb;
 
     size = 5, nmemb = 6;
+    /*     
+        当size==1的时候，返回的number的值就等于实际传送(交换)的字节数
+        此时freacI就等于read
+        此时fwrite就等于write
+    */
     ret = fread(buf, size, nmemb, fp);
     printf("buf:%s  ret:%d  long:%d\n", buf, ret,(int)strlen(buf));
     // 当size=5 nmemb=6  ret = 6        strlen(buf)=30
