@@ -30,8 +30,8 @@
 #define MP3_START_PATH "MP3_start.bmp"
 #define MP3_STOP_PATH "MP3_stop.bmp"
 #define MP3_CONTINUE_PATH "MP3_continue.bmp"
+#define MP3_FILE_PATH "1.mp3"
 
-int current_song = 1;
 int mp3_playing = 0; // Indicator for MP3 player state, 0: stopped, 1: playing
 int mp3_continue = 0;
 
@@ -82,11 +82,9 @@ void ioctl_led(int startX, int startY, int endX, int endY)
 }
 
 // 播放MP3文件
-void play_mp3(const char* mp3_file_path)
+void play_mp3()
 {
-    char command[100];
-    sprintf(command, "madplay %s &", mp3_file_path);
-    system(command);
+    system("madplay " MP3_FILE_PATH " &");
     mp3_playing = 1; // Set MP3 player state to playing
 }
 
@@ -435,7 +433,7 @@ int main(int argc, char *argv[])
                         // 播放/暂停 MP3
                         if (mp3_playing == 0)
                         {
-                            play_mp3("1.mp3");
+                            play_mp3();
                             show_MP3_stop(addr);
                         }
                         else
@@ -450,50 +448,6 @@ int main(int argc, char *argv[])
                                 continue_mp3();
                                 show_MP3_stop(addr);
                             }
-                        }
-                    }
-                    // 上一首歌 (startX > 0 && endX < 200) && (startY > 420 && endY < 480)
-                    else if ((startX > 0 && endX < 200) && (startY > 420 && endY < 480))
-                    {
-                        if (mp3_screen == 1)
-                        {
-                            // Kill the current MP3 process
-                            quit_mp3();
-                            mp3_continue = 0;
-
-                            // Play the previous song
-                            current_song--;
-                            if (current_song < 1)
-                                current_song = 2; // Assuming there are two songs
-
-                            char song_path[30];
-                            sprintf(song_path, "%d.mp3", current_song);
-                            // Play the new song
-                            play_mp3(song_path);
-
-                            show_MP3_stop(addr);
-                        }
-                    }
-                    // 下一首歌 (startX > 400 && endX < 600) && (startY > 420 && endY < 480)
-                    else if ((startX > 400 && endX < 600) && (startY > 420 && endY < 480))
-                    {
-                        if (mp3_screen == 1)
-                        {
-                            // Kill the current MP3 process
-                            quit_mp3();
-                            mp3_continue = 0;
-
-                            // Play the next song
-                            current_song++;
-                            if (current_song > 2) // Assuming there are two songs
-                                current_song = 1;
-
-                            char song_path[30];
-                            sprintf(song_path, "%d.mp3", current_song);
-                            // Play the new song
-                            play_mp3(song_path);
-
-                            show_MP3_stop(addr);
                         }
                     }
                 }
