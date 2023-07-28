@@ -1,142 +1,353 @@
-编译方法：
-    make
-清除之前的二进制文件
-    make clean
+阶段项目一
+    基于gec6818 的 智能家居
 
-GitHub： https://github.com/YESZGG/ZGG_C.git
+数据结构
 
-------------------------------------------------------------------------------
-智能家居（假的） ------ 基于粤嵌GEC6818开发板的各种小功能
+刷题
+    链表 + 栈 + 队列
 
-显示了开机动画之后显示desktop.bmp 桌面
-
-点击  x > 0 && x < 200 && y > 0 && y < 60
-实现自动播放功能    √
-1.bmp格式3张（1.bmp,3.bmp,5.bmp）
-2.jpg格式3张(2.jpg,3.jpg,6.jpg)
-3.bmp图片实现百叶窗、左进、右进等三种效果
-4.所有的图片要用：双向循环链表来存储
-5.循环播放后自动结束
-
-点击 x > 200 && x < 400 && y > 0 && y < 60
-实现手动播放功能    √
-1.bmp格式3张（1.bmp,3.bmp,5.bmp)
-2.jpg格式3张(2.jpg,4jpg,6.jpg)
-3.所有的图片要用：双向循环链表来存储（图片的存储顺序为1.bmp,2.jpg,3.bmp,4jpg,5.bmp,6.jpg）
-4.向右滑动显示上一张，向左滑动显示下一张
-
-其中，自动播放功能和手动播放功能的存储图片所用的结构体是相同的
-
-
-MP3功能     √
-处于主菜单界面时， 点击 x > 0 && x < 200 && y > 420 && y < 480
-跳转到MP3界面,显示MP3_start.bmp
-在MP3界面中，点击 x > 200 && x < 400 && y > 420 &&  y < 480,播放MP3
-播放：system("madplay 1.mp3 &"); 
-播放成功，同时更换MP3界面，显示MP3_stop.bmp
-再次点击 x > 200 && x < 400 && y > 420 &&  y < 480,赞同播放MP3
-暂停：system("killall -SIGSTOP madplay");
-暂停成功，同时更换MP3界面，显示MP3_start.bmp
-再次点击 x > 200 && x < 400 && y > 420 &&  y < 480,继续播放当首MP3
-播放成功，同时更换MP3界面，显示MP3_stop.bmp
-
-可以下载歌曲的方法:
-http://music.163.com/song/media/outer/url?id=1824020871.mp3
-
-将下方的id= xxxx  复制 更换到上面的id 再打开新页面链接
-
-https://music.163.com/song?id=1917549208&userid=537429233
-https://music.163.com/song?id=2036445126&userid=537429233
-https://music.163.com/song?id=1824020871&userid=537429233
-
-开灯功能    √
-处于主菜单界面时，点击 x > 200 && x < 400 && y > 420 && y < 480
-小灯依次打开,每个小灯亮灯之间有0.05秒延迟
-
-关灯功能    √
-处于主菜单界面时，点击 x > 400 && x < 600 && y > 420 && y < 480
-小灯依次灭灯,每个小灯灭灯之间有0.05秒延迟
-
-------------------------------------------------------------------------------
-
-
-工程目录：
+IO编程
+-------------------------------------------
 .
-├── admin    // 管理员信息
-│   ├── 1.txt
-│   ├── 2.txt
-│   └── 3.txt
-├── bin      // 二进制可执行程序
-│   └── main
-├── image    // 图片素材
-│   ├── 1.bmp
-│   ├── 2.jpg
-│   ├── 3.bmp
-│   ├── 4.jpg
-│   ├── 5.bmp
-│   ├── 6.jpg
-│   ├── 7.bmp
-│   ├── 8.bmp
-│   ├── 9.bmp
-│   ├── Admin.bmp
-│   ├── Angelababy.bmp
-│   ├── Auto_play.bmp
-│   ├── desktop.bmp
-│   ├── Exit.bmp
-│   ├── kun.bmp
-│   ├── Manual_play.bmp
-│   ├── MP3_continue.bmp
-│   ├── MP3_start.bmp
-│   ├── MP3_stop.bmp
-│   ├── start1.bmp
-│   ├── start2.bmp
-│   ├── start3.bmp
-│   └── zhangsan.bmp
-├── include     // 头文件
-│   ├── admin.h       // 管理员头文件
-│   ├── autoplay.h    // 自动播放头文件
-│   ├── font.h        // 字库头文件
-│   ├── lcdjpg.h      // jpg头文件
-│   ├── led_control.h
-│   ├── linkedlist.h
-│   ├── menu.h
-│   ├── mp3.h
-│   ├── open_file.h
-│   └── slideshow.h
-├── led         // 小灯驱动程序
-│   └── led.ko
-├── lib         // 字库
-│   ├── font
-│   └── libfont.a
-├── libjpeg     // JPG库
-│   ├── jconfig.h
-│   ├── jerror.h
-│   ├── jmorecfg.h
-│   ├── jpeglib.h
-│   ├── libjpeg.a
-│   ├── libjpeg.la
-│   ├── libjpeg.so
-│   ├── libjpeg.so.9
-│   └── libjpeg.so.9.1.0
-├── main        // 主程序
-│   └── main.c
-├── makefile    // Makefile文件
-├── mp3         // MP3
-│   ├── 都落ち.mp3
-│   └── Love_Story.mp3
-├── README.md
-└── src         // .c编译
-    ├── admin.c      // 管理员
-    ├── autoplay.c   // 自动播放
-    ├── lcdjpg.c     // jpg 进行修改过添加使jpg居中显示
-    ├── led.c        // 小灯控制
-    ├── linkedlist.c // 图片结构体
-    ├── menu.c       // 界面跳转
-    ├── mp3.c        // MP3播放、暂停、继续、结束
-    ├── open_file.c  // open fd_lcd
-    └── slideshow.c  // 手动播放
-
-10 directories, 64 files
-
-------------------------------------------------------------------------------
-
+├── 阶段项目一
+│   ├── admin
+│   │   ├── 1.txt
+│   │   ├── 2.txt
+│   │   └── 3.txt
+│   ├── bin
+│   │   └── main
+│   ├── image
+│   │   ├── 1.bmp
+│   │   ├── 2.jpg
+│   │   ├── 3.bmp
+│   │   ├── 4.jpg
+│   │   ├── 5.bmp
+│   │   ├── 6.jpg
+│   │   ├── 7.bmp
+│   │   ├── 8.bmp
+│   │   ├── 9.bmp
+│   │   ├── Admin.bmp
+│   │   ├── Angelababy.bmp
+│   │   ├── Auto_play.bmp
+│   │   ├── desktop.bmp
+│   │   ├── Exit.bmp
+│   │   ├── kun.bmp
+│   │   ├── Manual_play.bmp
+│   │   ├── MP3_continue.bmp
+│   │   ├── MP3_start.bmp
+│   │   ├── MP3_stop.bmp
+│   │   ├── start1.bmp
+│   │   ├── start2.bmp
+│   │   ├── start3.bmp
+│   │   └── zhangsan.bmp
+│   ├── include
+│   │   ├── admin.h
+│   │   ├── autoplay.h
+│   │   ├── font.h
+│   │   ├── lcdjpg.h
+│   │   ├── led_control.h
+│   │   ├── linkedlist.h
+│   │   ├── menu.h
+│   │   ├── mp3.h
+│   │   ├── open_file.h
+│   │   └── slideshow.h
+│   ├── led
+│   │   └── led.ko
+│   ├── lib
+│   │   ├── font
+│   │   └── libfont.a
+│   ├── libjpeg
+│   │   ├── jconfig.h
+│   │   ├── jerror.h
+│   │   ├── jmorecfg.h
+│   │   ├── jpeglib.h
+│   │   ├── libjpeg.a
+│   │   ├── libjpeg.la
+│   │   ├── libjpeg.so
+│   │   ├── libjpeg.so.9
+│   │   └── libjpeg.so.9.1.0
+│   ├── main
+│   │   ├── main.c
+│   │   ├── test
+│   │   ├── test1副本.c
+│   │   ├── test副本.c
+│   │   └── test.c
+│   ├── makefile
+│   ├── mp3
+│   │   ├── 都落ち.mp3
+│   │   └── Love_Story.mp3
+│   ├── README.md
+│   └── src
+│       ├── admin.c
+│       ├── autoplay.c
+│       ├── lcdjpg.c
+│       ├── led.c
+│       ├── linkedlist.c
+│       ├── menu.c
+│       ├── mp3.c
+│       ├── open_file.c
+│       ├── slideshow.c
+│       └── test.c
+├── 数据结构
+│   ├── 笔记
+│   │   ├── 链表
+│   │   │   ├── 单向链表.png
+│   │   │   ├── 分析作业1.jpg
+│   │   │   ├── 内核链表地址偏移.png
+│   │   │   ├── 内核链表.png
+│   │   │   ├── 数据结构-01-链表.png
+│   │   │   ├── 双向非循环链表.png
+│   │   │   └── 双向循环链表.png
+│   │   ├── 树和二叉树
+│   │   │   ├── 二叉树转换成树.png
+│   │   │   ├── 二叉树转换为森林.png
+│   │   │   ├── 哈夫曼树
+│   │   │   │   ├── 哈夫曼编码.png
+│   │   │   │   ├── 哈夫曼练习.png
+│   │   │   │   └── 哈夫曼树的构建.png
+│   │   │   ├── 练习1.png
+│   │   │   ├── 练习2.png
+│   │   │   ├── 平衡操作
+│   │   │   │   ├── 单向右旋情况1.png
+│   │   │   │   ├── 单向右旋情况2.png
+│   │   │   │   ├── 单向右旋情况3.png
+│   │   │   │   ├── 单向左旋情况1.png
+│   │   │   │   ├── 单向左旋情况2.png
+│   │   │   │   ├── 单向左旋情况3.png
+│   │   │   │   ├── 先右后左情况.png
+│   │   │   │   ├── 先左后右情况1.png
+│   │   │   │   ├── 先左后右情况2.png
+│   │   │   │   └── 先左后右情况3.png
+│   │   │   ├── 森林转换为二叉树.png
+│   │   │   ├── 删除1.png
+│   │   │   ├── 删除2.png
+│   │   │   ├── 树转换为二叉树.png
+│   │   │   └── 一个简单树的递归过程.png
+│   │   └── 栈和队列
+│   │       ├── 前中后缀表达式.jpg
+│   │       └── 栈和队列.png
+│   └── CODE
+│       ├── 队列
+│       │   ├── 2_queue队.c
+│       │   ├── a.out
+│       │   ├── queue.c
+│       │   └── test_queue.c
+│       ├── 链表
+│       │   ├── 单向链表
+│       │   │   ├── 1_单向链表list.c
+│       │   │   ├── singlist
+│       │   │   ├── singlist.c
+│       │   │   └── structure_array.c
+│       │   ├── 单向循环链表
+│       │   │   ├── 2_单向循环链表.c
+│       │   │   └── test.c
+│       │   ├── 麦当劳点餐系统
+│       │   │   ├── bin
+│       │   │   │   └── target
+│       │   │   ├── include
+│       │   │   │   ├── admin.h
+│       │   │   │   └── order.h
+│       │   │   ├── main
+│       │   │   │   └── main.c
+│       │   │   ├── Makefile
+│       │   │   ├── README.md
+│       │   │   └── src
+│       │   │       ├── admin.c
+│       │   │       └── userorder.c
+│       │   ├── 双向链表
+│       │   │   ├── a.out
+│       │   │   └── test.c
+│       │   ├── 双向循环链表
+│       │   │   ├── dclink
+│       │   │   │   ├── dclink
+│       │   │   │   ├── dclink.c
+│       │   │   │   ├── dclink.h
+│       │   │   │   └── main.c
+│       │   │   └── dcycliclink.c
+│       │   ├── 图书管理
+│       │   │   ├── 单向循环链表
+│       │   │   │   ├── bookmanagement
+│       │   │   │   ├── bookmanagement.c
+│       │   │   │   ├── bookmanagement.h
+│       │   │   │   └── main.c
+│       │   │   └── 双向链表
+│       │   │       ├── bookmanagement
+│       │   │       ├── bookmanagement.c
+│       │   │       ├── bookmanagement.h
+│       │   │       └── main.c
+│       │   └── 学生管理
+│       │       ├── main.c
+│       │       ├── studentlist
+│       │       ├── studentlist.c
+│       │       └── studentlist.h
+│       ├── 树和二叉树
+│       │   ├── 1689209660.html
+│       │   ├── a.out
+│       │   ├── BST二叉搜寻树
+│       │   │   ├── BST.c
+│       │   │   ├── commonheader.h
+│       │   │   ├── drawtree.h
+│       │   │   ├── head4queue.h
+│       │   │   ├── head4tree.h
+│       │   │   └── queue.c
+│       │   ├── README.md
+│       │   └── test_tree.c
+│       ├── 栈
+│       │   ├── 1_stack栈.c
+│       │   ├── a.out
+│       │   ├── stack.c
+│       │   └── test_stack.c
+│       └── Makefile参考demo
+│           ├── 1_简单版Makefile
+│           │   ├── fun1.c
+│           │   ├── fun2.c
+│           │   ├── head.h
+│           │   ├── libbling.a
+│           │   ├── libbling.so
+│           │   ├── Makefile
+│           │   ├── Makefile1
+│           │   ├── project.c
+│           │   ├── README.txt
+│           │   └── target
+│           ├── 2_复杂版的Makefile
+│           │   ├── bin
+│           │   │   └── target
+│           │   ├── include
+│           │   │   └── head.h
+│           │   ├── lib
+│           │   │   ├── libbling.a
+│           │   │   └── libbling.so
+│           │   ├── main
+│           │   │   └── project.c
+│           │   ├── Makefile
+│           │   ├── Makefile_bak
+│           │   ├── README.txt
+│           │   └── src
+│           │       ├── fun1.c
+│           │       └── fun2.c
+│           ├── Makefile
+│           └── zuoye
+│               └── 学生管理
+│                   ├── bakup
+│                   │   ├── a.out
+│                   │   ├── bakup
+│                   │   │   └── zuoye3.c
+│                   │   ├── fun.c
+│                   │   ├── head.h
+│                   │   ├── main.c
+│                   │   └── zuoye3.c
+│                   ├── bin
+│                   │   └── target
+│                   ├── include
+│                   │   └── head.h
+│                   ├── main
+│                   │   └── main.c
+│                   ├── Makefile
+│                   ├── README.txt
+│                   └── src
+│                       ├── add_info.c
+│                       ├── find_info.c
+│                       ├── register_login.c
+│                       ├── show_info.c
+│                       └── sort_info.c
+├── 刷题
+│   ├── 笔记进程.docx
+│   └── 刷题牛客链表+栈.docx
+├── IO编程
+│   ├── 标准IO
+│   │   ├── 1.txt
+│   │   ├── 2.txt
+│   │   ├── 4.jpg
+│   │   ├── 可莉.jpg
+│   │   ├── 任意拷贝.c
+│   │   ├── a.out
+│   │   ├── bmp
+│   │   ├── fopen.c
+│   │   ├── fread.c
+│   │   ├── fwrite.c
+│   │   ├── IO_bmp.c
+│   │   └── test.c
+│   ├── 触摸屏
+│   │   ├── input_event触摸屏
+│   │   │   ├── 3_ts触摸屏.c
+│   │   │   ├── 4_ts获取触摸屏的坐标值.c
+│   │   │   ├── 5_ts触摸屏单击和滑动的封装.c
+│   │   │   ├── button
+│   │   │   ├── clickOnTheButton.c
+│   │   │   ├── clickToSwitch
+│   │   │   ├── clickToSwitch.c
+│   │   │   ├── Down.bmp
+│   │   │   ├── test
+│   │   │   ├── test2.c
+│   │   │   ├── test.c
+│   │   │   ├── touchbmp
+│   │   │   ├── touchscreen.c
+│   │   │   └── Up.bmp
+│   │   └── JPG格式
+│   │       ├── 1.bmp
+│   │       ├── 2.bmp
+│   │       ├── 3.bmp
+│   │       ├── 4.bmp
+│   │       ├── 5.bmp
+│   │       ├── 6.jpg
+│   │       ├── 7.jpg
+│   │       ├── bmp_a_jpg
+│   │       ├── bmp_a_jpg.c
+│   │       ├── lcdjpg.c
+│   │       ├── lcdjpg.h
+│   │       └── libjpeg
+│   │           ├── jconfig.h
+│   │           ├── jerror.h
+│   │           ├── jmorecfg.h
+│   │           ├── jpeglib.h
+│   │           ├── libjpeg.a
+│   │           ├── libjpeg.la
+│   │           ├── libjpeg.so
+│   │           ├── libjpeg.so.9
+│   │           └── libjpeg.so.9.1.0
+│   ├── 系统IO
+│   │   ├── 1.txt
+│   │   ├── a.out
+│   │   ├── close.c
+│   │   ├── fd.c
+│   │   ├── lseek.c
+│   │   ├── open.c
+│   │   ├── read.c
+│   │   └── write.c
+│   ├── 作业
+│   │   ├── 1.txt
+│   │   ├── 2.txt
+│   │   ├── 任意拷贝.c
+│   │   ├── 图片拷贝.c
+│   │   ├── a.out
+│   │   ├── jige1.jpeg
+│   │   ├── README.md
+│   │   ├── task1.c
+│   │   └── task2.c
+│   └── GEC6818
+│       ├── BMP格式画图
+│       │   ├── 1_bmp.c
+│       │   ├── 2_bmp任意大小.c
+│       │   ├── bmp
+│       │   ├── bmp.c
+│       │   ├── rotation
+│       │   ├── rotation.c
+│       │   └── test
+│       └── JPG格式画图
+│           ├── 球球大作战.c
+│           ├── circular
+│           ├── collisionball
+│           ├── collisionball.c
+│           ├── color
+│           ├── color.c
+│           ├── mmap
+│           ├── mmap_circular.c
+│           ├── mmap._color.c
+│           ├── move
+│           ├── move_taiChi.c
+│           ├── README.md
+│           ├── roate
+│           ├── roate.c
+│           ├── taiChi
+│           └── taiChi.c
+└── README.md
