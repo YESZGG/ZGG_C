@@ -1,0 +1,10 @@
+1.txt
+笔记
+函数.sh
+获取输入.sh
+算术运算命令expr.sh
+条件语句.sh
+files.txt
+for循环.sh
+shell.sh
+while循环.sh
