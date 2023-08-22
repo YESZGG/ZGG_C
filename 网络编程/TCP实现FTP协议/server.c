@@ -9,10 +9,10 @@
 #define BUFFER_SIZE 1024
 #define SERVER_IP "192.168.1.148"
 
-const char *get_formatted_time(int type)
+const char *get_formatted_time(int type);
 
-    // 线程函数，用于接收文件内容并保存到服务器上的文件中
-    void *receiveFileContent(void *sockfd)
+// 线程函数，用于接收文件内容并保存到服务器上的文件中
+void *receiveFileContent(void *sockfd)
 {
     int clientSockfd = *(int *)sockfd;
     char buffer[BUFFER_SIZE];

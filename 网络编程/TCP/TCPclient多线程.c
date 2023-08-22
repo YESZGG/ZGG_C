@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    pthread_t sendThreadID, receiveThreadID;
+    pthread_t receiveThreadID;
 
     if (pthread_create(&receiveThreadID, NULL, receiveThread, (void *)&socket_fd) != 0)
     {
